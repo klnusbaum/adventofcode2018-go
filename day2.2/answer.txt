@@ -1,0 +1,5 @@
+The two lines that differ by only 1 character are:
+	bpacnmglhizqygfsjixtukwudr
+	bpacnmglhizqygfsjixtlkwudr
+The characters between them that are the same are:
+	bpacnmglhizqygfsjixtkwudr
