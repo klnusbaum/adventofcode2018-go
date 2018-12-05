@@ -58,6 +58,8 @@ func readPolymer(filename string) (string, error) {
 	return strings.TrimSpace(string(contents)), nil
 }
 
+// This could vastly be impoved by instead of remove characters,
+// just building up a new string for each pass over the polymer
 func processPolymer(polymer string) string {
 	toReprocess := polymer
 	for i := 0; i+1 < len(polymer); i++ {
