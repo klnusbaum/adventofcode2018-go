@@ -1,0 +1,3 @@
+Most asleep guard: #661
+Minute most likely to be asleep: 30
+Most asleep minute * guard id: 19830
