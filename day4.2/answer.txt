@@ -1,0 +1,22 @@
+Guard #727 is asleep at 36, 11 times
+Guard #157 is asleep at 43, 17 times
+Guard #1021 is asleep at 24, 8 times
+Guard #3257 is asleep at 43, 10 times
+Guard #2269 is asleep at 51, 9 times
+Guard #587 is asleep at 35, 9 times
+Guard #2083 is asleep at 35, 16 times
+Guard #571 is asleep at 28, 10 times
+Guard #557 is asleep at 30, 13 times
+Guard #2857 is asleep at 30, 14 times
+Guard #971 is asleep at 45, 19 times
+Guard #1373 is asleep at 41, 5 times
+Guard #1801 is asleep at 33, 11 times
+Guard #331 is asleep at 52, 11 times
+Guard #661 is asleep at 30, 16 times
+Guard #73 is asleep at 21, 9 times
+Guard #103 is asleep at 29, 9 times
+Guard #113 is asleep at 32, 12 times
+Guard #2267 is asleep at 48, 11 times
+Guard #1511 is asleep at 39, 5 times
+Guard #971 is asleep at minute 45 very often
+Those two number multipled are 43695
