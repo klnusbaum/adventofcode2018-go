@@ -54,7 +54,6 @@ import (
 	"fmt"
 	"github.com/klnusbaum/adventofcode2018/ll"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -79,44 +78,36 @@ func analyze(filename string) error {
 	}
 
 	allPoints := getPoints(lines)
-	boundPoints := pointsWithBounds(allPoints)
-
-	// allPoints := map[int]point{
-	// 	0: point{1, 1},
-	// 	1: point{1, 6},
-	// 	2: point{8, 3},
-	// 	3: point{3, 4},
-	// 	4: point{5, 5},
-	// 	5: point{8, 9},
-	// }
-	// boundPoints := pointsWithBounds(allPoints)
-
-	var bp1 []int
-	for id, _ := range boundPoints {
-		bp1 = append(bp1, id)
-	}
-	sort.Ints(bp1)
-	fmt.Printf("Bound points: %v\n", bp1)
-
-	// maxX, maxY := maxXY(allPoints)
-
-	// fmt.Printf("Maxx %d Maxy %d\n", maxX, maxY)
+	maxX, maxY := maxXY(allPoints)
 
 	closestHisto := make(map[int]int)
-	for i := 0; i < 500; i++ {
-		for j := 0; j < 500; j++ {
+	pointOwnership := make(map[int]map[int]int)
+	for i := 0; i < maxX; i++ {
+		pointOwnership[i] = make(map[int]int)
+		for j := 0; j < maxY; j++ {
 			closestId := closestPoint(allPoints, i, j)
 			if closestId == -1 {
+				pointOwnership[i][j] = -1
 				continue
 			}
-			if _, ok := boundPoints[closestId]; ok {
-				closestHisto[closestId] += 1
-			}
+			pointOwnership[i][j] = closestId
+			closestHisto[closestId] += 1
 		}
 	}
 
-	fmt.Printf("bound points: %v\n", boundPoints)
-	fmt.Printf("Closest histo: %v\n", closestHisto)
+	for i := 0; i < maxX; i++ {
+		topOwner := pointOwnership[i][0]
+		bottomOwner := pointOwnership[i][maxY]
+		delete(closestHisto, topOwner)
+		delete(closestHisto, bottomOwner)
+	}
+
+	for i := 0; i < maxY; i++ {
+		leftOwner := pointOwnership[0][i]
+		rightOwner := pointOwnership[maxX][i]
+		delete(closestHisto, leftOwner)
+		delete(closestHisto, rightOwner)
+	}
 
 	id, largestArea := largestInHisto(closestHisto)
 
@@ -134,49 +125,6 @@ func getPoints(lines []string) map[int]point {
 	}
 
 	return points
-}
-
-func pointsWithBounds(points map[int]point) map[int]point {
-	boundedPoints := make(map[int]point)
-	for id, point := range points {
-		fmt.Printf("Checking Point %d: %d, %d\n", id, point.x, point.y)
-		if isBounded(points, point) {
-			boundedPoints[id] = point
-		}
-	}
-	return boundedPoints
-}
-
-func isBounded(allPoints map[int]point, target point) bool {
-	topRight, topLeft, bottomRight, bottomLeft := false, false, false, false
-
-	for _, p := range allPoints {
-		if p.x == target.x && p.y == target.y {
-			continue
-		}
-
-		if p.x > target.x && p.y > target.y {
-			fmt.Printf("\tTop right bounded by %d, %d\n", p.x, p.y)
-			topRight = true
-		} else if p.x < target.x && p.y > target.y {
-			fmt.Printf("\tTop left bounded by %d, %d\n", p.x, p.y)
-			topLeft = true
-		} else if p.x > target.x && p.y < target.y {
-			fmt.Printf("\tBottom right bounded by %d, %d\n", p.x, p.y)
-			bottomRight = true
-		} else if p.x < target.x && p.y < target.y {
-			fmt.Printf("\tBottom left bounded by %d, %d\n", p.x, p.y)
-			bottomLeft = true
-		}
-
-		if topRight && topLeft && bottomRight && bottomLeft {
-			return true
-		}
-
-	}
-
-	return false
-
 }
 
 func closestPoint(allPoints map[int]point, x, y int) int {
@@ -251,56 +199,3 @@ func maxXY(points map[int]point) (int, int) {
 
 	return maxX, maxY
 }
-
-// bad is bounded
-// func isBounded(allPoints map[int]point, target point) bool {
-// 	above, below, left, right := false, false, false, false
-// 	topPoint := point{
-// 		x: target.x,
-// 		y: 10000000,
-// 	}
-// 	bottomPoint := point{
-// 		x: target.x,
-// 		y: -10000000,
-// 	}
-// 	leftPoint := point{
-// 		x: -10000000,
-// 		y: target.y,
-// 	}
-// 	rightPoint := point{
-// 		x: 10000000,
-// 		y: target.y,
-// 	}
-
-// 	for _, p := range allPoints {
-// 		if p.x == target.x && p.y == target.y {
-// 			continue
-// 		}
-
-// 		tpDist := manDistance(topPoint.x, topPoint.y, p.x, p.y)
-// 		bpDist := manDistance(bottomPoint.x, bottomPoint.y, p.x, p.y)
-// 		lpDist := manDistance(leftPoint.x, leftPoint.y, p.x, p.y)
-// 		rpDist := manDistance(rightPoint.x, rightPoint.y, p.x, p.y)
-// 		if tpDist < manDistance(topPoint.x, topPoint.y, target.x, target.y) {
-// 			above = true
-// 		}
-
-// 		if bpDist < manDistance(bottomPoint.x, bottomPoint.y, target.x, target.y) {
-// 			below = true
-// 		}
-
-// 		if lpDist < manDistance(leftPoint.x, leftPoint.y, target.x, target.y) {
-// 			left = true
-// 		}
-
-// 		if rpDist < manDistance(rightPoint.x, rightPoint.y, target.x, target.y) {
-// 			left = true
-// 		}
-
-// 		if above && below && left && right {
-// 			return true
-// 		}
-// 	}
-
-// 	return false
-// }

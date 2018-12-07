@@ -1,0 +1,1 @@
+Largest bounded area is point 34 with area: 4186
