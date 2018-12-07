@@ -1,0 +1,18 @@
+initial bounded
+Bound points: [0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 29 30 31 32 33 34 36 37 38 40 41 42 43 44 45 46 47 48 49]
+
+unbound points 15 28 35 39 
+
+this is wrong, for example, point 42 is unbounded
+
+this is a particularily tough problem
+
+new (now much more bounded!)
+Bound points: [0 1 2 3 5 6 7 8 9 12 13 16 17 18 19 21 22 23 24 25 26 27 29 30 31 32 33 34 36 37 38 40 43 44 45 47 48 49]
+
+unbound poins 4 10 11 14 15 20 28 35 39 41 42 46 
+
+still not correct though. an unbounded point is getting through
+
+Man, I really whish I had like, a map() function or list comprehensions.
+Go is not great for this kind of stuff.

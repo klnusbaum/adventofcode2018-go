@@ -52,11 +52,11 @@ What is the size of the largest area that isn't infinite?
 
 import (
 	"fmt"
+	"github.com/klnusbaum/adventofcode2018/ll"
 	"os"
-	// "sort"
+	"sort"
 	"strconv"
 	"strings"
-	// "github.com/klnusbaum/adventofcode2018/ll"
 )
 
 type point struct {
@@ -72,34 +72,39 @@ func main() {
 }
 
 func analyze(filename string) error {
-	// loader := ll.NewLineLoader(filename)
-	// lines, err := loader.Load()
-	// if err != nil {
-	// 	return fmt.Errorf("Error loading lines: %v", lines)
-	// }
-
-	// allPoints := getPoints(lines)
-	// boundPoints := pointsWithBounds(allPoints)
-	allPoints := map[int]point{
-		0: point{1, 1},
-		1: point{1, 6},
-		2: point{8, 3},
-		3: point{3, 4},
-		4: point{5, 5},
-		5: point{8, 9},
+	loader := ll.NewLineLoader(filename)
+	lines, err := loader.Load()
+	if err != nil {
+		return fmt.Errorf("Error loading lines: %v", lines)
 	}
+
+	allPoints := getPoints(lines)
 	boundPoints := pointsWithBounds(allPoints)
 
-	// var bp1 []int
-	// for id, _ := range boundPoints {
-	// 	bp1 = append(bp1, id)
+	// allPoints := map[int]point{
+	// 	0: point{1, 1},
+	// 	1: point{1, 6},
+	// 	2: point{8, 3},
+	// 	3: point{3, 4},
+	// 	4: point{5, 5},
+	// 	5: point{8, 9},
 	// }
-	// sort.Ints(bp1)
-	// fmt.Printf("Bound points: %v\n", bp1)
+	// boundPoints := pointsWithBounds(allPoints)
+
+	var bp1 []int
+	for id, _ := range boundPoints {
+		bp1 = append(bp1, id)
+	}
+	sort.Ints(bp1)
+	fmt.Printf("Bound points: %v\n", bp1)
+
+	// maxX, maxY := maxXY(allPoints)
+
+	// fmt.Printf("Maxx %d Maxy %d\n", maxX, maxY)
 
 	closestHisto := make(map[int]int)
-	for i := -100; i < 900; i++ {
-		for j := -100; j < 900; j++ {
+	for i := 0; i < 500; i++ {
+		for j := 0; j < 500; j++ {
 			closestId := closestPoint(allPoints, i, j)
 			if closestId == -1 {
 				continue
@@ -110,11 +115,12 @@ func analyze(filename string) error {
 		}
 	}
 
+	fmt.Printf("bound points: %v\n", boundPoints)
 	fmt.Printf("Closest histo: %v\n", closestHisto)
 
-	largestArea := largestInHisto(closestHisto)
+	id, largestArea := largestInHisto(closestHisto)
 
-	fmt.Printf("Largets bounded area: %v\n", largestArea)
+	fmt.Printf("Largest bounded area is point %d with area: %d\n", id, largestArea)
 	return nil
 }
 
@@ -133,6 +139,7 @@ func getPoints(lines []string) map[int]point {
 func pointsWithBounds(points map[int]point) map[int]point {
 	boundedPoints := make(map[int]point)
 	for id, point := range points {
+		fmt.Printf("Checking Point %d: %d, %d\n", id, point.x, point.y)
 		if isBounded(points, point) {
 			boundedPoints[id] = point
 		}
@@ -141,26 +148,35 @@ func pointsWithBounds(points map[int]point) map[int]point {
 }
 
 func isBounded(allPoints map[int]point, target point) bool {
-	above, below, left, right := false, false, false, false
+	topRight, topLeft, bottomRight, bottomLeft := false, false, false, false
+
 	for _, p := range allPoints {
-		if p.x < target.x {
-			left = true
-		} else if p.x > target.x {
-			right = true
+		if p.x == target.x && p.y == target.y {
+			continue
 		}
 
-		if p.y < target.y {
-			above = true
-		} else if p.y > target.y {
-			below = true
+		if p.x > target.x && p.y > target.y {
+			fmt.Printf("\tTop right bounded by %d, %d\n", p.x, p.y)
+			topRight = true
+		} else if p.x < target.x && p.y > target.y {
+			fmt.Printf("\tTop left bounded by %d, %d\n", p.x, p.y)
+			topLeft = true
+		} else if p.x > target.x && p.y < target.y {
+			fmt.Printf("\tBottom right bounded by %d, %d\n", p.x, p.y)
+			bottomRight = true
+		} else if p.x < target.x && p.y < target.y {
+			fmt.Printf("\tBottom left bounded by %d, %d\n", p.x, p.y)
+			bottomLeft = true
 		}
 
-		if above && below && left && right {
+		if topRight && topLeft && bottomRight && bottomLeft {
 			return true
 		}
+
 	}
 
 	return false
+
 }
 
 func closestPoint(allPoints map[int]point, x, y int) int {
@@ -197,13 +213,94 @@ func abs(val int) int {
 	return val
 }
 
-func largestInHisto(histo map[int]int) int {
+func largestInHisto(histo map[int]int) (int, int) {
 	largestArea := 0
-	for _, area := range histo {
+	largestId := -1
+	for id, area := range histo {
 		if area > largestArea {
 			largestArea = area
+			largestId = id
 		}
 	}
-	return largestArea
+	return largestId, largestArea
 
 }
+
+func maxXY(points map[int]point) (int, int) {
+	xs := make([]int, 0, len(points))
+	ys := make([]int, 0, len(points))
+
+	for _, point := range points {
+		xs = append(xs, point.x)
+		ys = append(ys, point.y)
+	}
+
+	maxX := xs[0]
+	for i := 1; i < len(xs); i++ {
+		if xs[i] > maxX {
+			maxX = xs[i]
+		}
+	}
+
+	maxY := ys[0]
+	for i := 1; i < len(ys); i++ {
+		if ys[i] > maxY {
+			maxY = ys[i]
+		}
+	}
+
+	return maxX, maxY
+}
+
+// bad is bounded
+// func isBounded(allPoints map[int]point, target point) bool {
+// 	above, below, left, right := false, false, false, false
+// 	topPoint := point{
+// 		x: target.x,
+// 		y: 10000000,
+// 	}
+// 	bottomPoint := point{
+// 		x: target.x,
+// 		y: -10000000,
+// 	}
+// 	leftPoint := point{
+// 		x: -10000000,
+// 		y: target.y,
+// 	}
+// 	rightPoint := point{
+// 		x: 10000000,
+// 		y: target.y,
+// 	}
+
+// 	for _, p := range allPoints {
+// 		if p.x == target.x && p.y == target.y {
+// 			continue
+// 		}
+
+// 		tpDist := manDistance(topPoint.x, topPoint.y, p.x, p.y)
+// 		bpDist := manDistance(bottomPoint.x, bottomPoint.y, p.x, p.y)
+// 		lpDist := manDistance(leftPoint.x, leftPoint.y, p.x, p.y)
+// 		rpDist := manDistance(rightPoint.x, rightPoint.y, p.x, p.y)
+// 		if tpDist < manDistance(topPoint.x, topPoint.y, target.x, target.y) {
+// 			above = true
+// 		}
+
+// 		if bpDist < manDistance(bottomPoint.x, bottomPoint.y, target.x, target.y) {
+// 			below = true
+// 		}
+
+// 		if lpDist < manDistance(leftPoint.x, leftPoint.y, target.x, target.y) {
+// 			left = true
+// 		}
+
+// 		if rpDist < manDistance(rightPoint.x, rightPoint.y, target.x, target.y) {
+// 			left = true
+// 		}
+
+// 		if above && below && left && right {
+// 			return true
+// 		}
+// 	}
+
+// 	return false
+// }
