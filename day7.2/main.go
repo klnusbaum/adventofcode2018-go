@@ -68,7 +68,7 @@ func doSteps(requirements map[string]map[string]bool) int {
 	t := 0
 	workerLetters := []string{"", "", "", "", ""}
 	workerTimeLeft := []int{0, 0, 0, 0, 0}
-	for !(len(requirements) == 0 && allZero(workerTimeLeft)) {
+	for {
 		for i, timeLeft := range workerTimeLeft {
 			if timeLeft == 0 {
 				finishedLetter := workerLetters[i]
@@ -111,11 +111,14 @@ func doSteps(requirements map[string]map[string]bool) int {
 			}
 		}
 
-		t++
 		sub1(workerTimeLeft)
+		if len(requirements) == 0 && allZero(workerTimeLeft) {
+			break
+		}
+		t++
 	}
 
-	return t - 1
+	return t
 }
 
 func sub1(times []int) {
