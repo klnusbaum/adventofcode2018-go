@@ -1,0 +1,27 @@
+Next: B
+Next: E
+Next: T
+Next: U
+Next: F
+Next: N
+Next: V
+Next: A
+Next: D
+Next: W
+Next: G
+Next: P
+Next: L
+Next: R
+Next: J
+Next: O
+Next: H
+Next: M
+Next: X
+Next: K
+Next: Z
+Next: Q
+Next: C
+Next: I
+Next: S
+Next: Y
+Order is: BETUFNVADWGPLRJOHMXKZQCISY
