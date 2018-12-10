@@ -244,15 +244,15 @@ func withinBounds(points []*point) bool {
 		}
 	}
 
-	return abs(maxX-minX) < 100 && abs(maxY-minY) < 100
+	return abs(maxX-minX) < 170 && abs(maxY-minY) < 170
 }
 
 func printImage(points []*point, i int) {
 	image := image.NewRGBA(
 		image.Rectangle{
 			Min: image.Point{
-				X: 0,
-				Y: 0,
+				X: 100,
+				Y: 50,
 			},
 			Max: image.Point{
 				X: 300,
