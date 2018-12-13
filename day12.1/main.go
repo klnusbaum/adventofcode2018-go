@@ -1,7 +1,7 @@
 package main
 
-// 10:35
-// 11:31
+// start Dec 13 10:35 am
+// finish part 1  Dev 13 11:31 am
 /*
  */
 
