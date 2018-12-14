@@ -62,8 +62,8 @@ func analyze(filename string) error {
 }
 
 func runSimulation(tracks map[point]rune, carts map[point]cart) point {
-	maxX, maxY := maxInt(tracks)
-	printBoard(tracks, carts, maxX, maxY)
+	// maxX, maxY := maxInt(tracks)
+	// printBoard(tracks, carts, maxX, maxY)
 	for len(carts) > 1 {
 		// for g := 0; g < 100 && !collision; g++ {
 		ps := sortedCartPoints(carts)
@@ -187,7 +187,7 @@ func sortedCartPoints(carts map[point]cart) points {
 		ps = append(ps, p)
 	}
 	sort.Sort(ps)
-	fmt.Printf("%v\n", ps)
+	// fmt.Printf("%v\n", ps)
 
 	return ps
 }
