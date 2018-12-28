@@ -1,0 +1,1 @@
+Number of samples that fit three or more: 547
